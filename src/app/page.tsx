@@ -1,13 +1,6 @@
-import HomePageGroupButtons from "../components/HomePageGroupButtons";
-import styles from "./page.module.css";
+import { redirect } from "next/navigation";
 function HomePage() {
-  return (
-    <main>
-      <div className={styles.buttonGroupWrapper}>
-        <HomePageGroupButtons />
-      </div>
-    </main>
-  );
+  redirect("/create");
 }
 
 export default HomePage;

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import MuiThemeProvider from "../components/MuiThemeProvider";
+import HomePageGroupButtons from "../components/HomePageGroupButtons";
 import "./globals.css";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,7 +19,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AppRouterCacheProvider>
-          <MuiThemeProvider>{children}</MuiThemeProvider>
+          <MuiThemeProvider>
+            <div className={styles.buttonGroupWrapper}>
+              <HomePageGroupButtons />
+            </div>
+            {children}
+          </MuiThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
