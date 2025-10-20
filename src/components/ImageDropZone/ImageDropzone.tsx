@@ -1,0 +1,53 @@
+"use client";
+import React, { useCallback, useState, useEffect } from "react";
+import { Box } from "@mui/material";
+import DropArea from "./DropArea";
+import ImagePreview from "./ImagePreview";
+import ActionButtons from "./ActionButtons";
+
+export interface FileWithPreview {
+  file: File;
+  preview: string;
+  uploadedUrl: string;
+}
+
+export default function ImageDropzone() {
+  const [files, setFiles] = useState<FileWithPreview[]>([]);
+
+  const uploadFile = async (file: File): Promise<FileWithPreview> => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
+    const data = await res.json();
+
+    return {
+      file,
+      preview: URL.createObjectURL(file),
+      uploadedUrl: data.url.split("/").at(-1) ?? data.url,
+    };
+  };
+
+  const handleDrop = useCallback(async (accepted: File[]) => {
+    const uploadedFiles = await Promise.all(accepted.map(uploadFile));
+    setFiles((prev) => [...prev, ...uploadedFiles]);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      files.forEach((f) => URL.revokeObjectURL(f.preview));
+    };
+  }, [files]);
+
+  const generateCode = () => {
+    console.log("Files to process:", files);
+  };
+
+  return (
+    <Box>
+      <DropArea onDrop={handleDrop} />
+      <ImagePreview files={files} />
+      <ActionButtons files={files} onGenerate={generateCode} />
+    </Box>
+  );
+}

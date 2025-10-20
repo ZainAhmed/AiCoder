@@ -1,4 +1,4 @@
-import ImageDropzone from "@/components/ImageDropzone";
+import ImageDropzone from "@/components/ImageDropZone/ImageDropzone";
 import React from "react";
 function NewPage() {
   return (
