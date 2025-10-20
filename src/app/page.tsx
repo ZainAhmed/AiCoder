@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 function HomePage() {
-  redirect("/create");
+  redirect("/create/new");
 }
 
 export default HomePage;

@@ -1,0 +1,9 @@
+.buttonGroupWrapper {
+  display: flex; /* enable flexbox */
+  flex-direction: column; /* stack children vertically */
+  align-items: center; /* center horizontally */
+  justify-content: center; /* center vertically */
+  text-align: center; /* optional: center text inside elements */
+  gap: 1rem; /* optional: spacing between children */
+  margin-top: 50px;
+}

@@ -7,24 +7,24 @@ import AddIcon from "@mui/icons-material/Add";
 import { useRouter } from "next/navigation";
 
 function HomePageGroupButtons() {
-  const [selected, setSelected] = useState("create"); // default selected
+  const [selected, setSelected] = useState("new"); // default selected
   const router = useRouter();
 
-  const handleClick = (page: "create" | "modify") => {
+  const handleClick = (page: "new" | "modify") => {
     setSelected(page);
-    if (page === "create") {
-      router.push("/create"); // navigate to create page
+    if (page === "new") {
+      router.push("/create/new");
     } else {
-      router.push("/modify"); // navigate to modify page
+      router.push("/create/modify");
     }
   };
 
   return (
     <ButtonGroup variant="contained" aria-label="Basic button group">
       <Button
-        color={selected === "create" ? "secondary" : "primary"}
+        color={selected === "new" ? "secondary" : "primary"}
         startIcon={<AddIcon />}
-        onClick={() => handleClick("create")}
+        onClick={() => handleClick("new")}
       >
         Create New App
       </Button>
@@ -33,7 +33,7 @@ function HomePageGroupButtons() {
         startIcon={<GitHubIcon />}
         onClick={() => handleClick("modify")}
       >
-        Modify Repo from Image
+        Modify App from Image
       </Button>
     </ButtonGroup>
   );

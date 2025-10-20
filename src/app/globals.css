@@ -5,9 +5,16 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #354854;
     --foreground: #ededed;
   }
+}
+.logo {
+  display: flex; /* enable flexbox */
+  flex-direction: column; /* stack children vertically */
+  align-items: center; /* center horizontally */
+  justify-content: center; /* center vertically */
+  text-align: center; /* optional: center text inside elements */
 }
 
 html,

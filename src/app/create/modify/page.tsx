@@ -1,7 +1,7 @@
 import React from "react";
 
 function ModifyPage() {
-  return <div>ModifyPage</div>;
+  return <div>Modify Page</div>;
 }
 
 export default ModifyPage;
