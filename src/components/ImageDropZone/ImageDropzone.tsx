@@ -39,8 +39,16 @@ export default function ImageDropzone() {
     };
   }, [files]);
 
-  const generateCode = () => {
+  const generateCode = async () => {
     console.log("Files to process:", files);
+    const imageUrls = files.map((file) => file.uploadedUrl);
+    await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(imageUrls),
+    });
   };
 
   return (
