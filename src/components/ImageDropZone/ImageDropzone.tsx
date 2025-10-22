@@ -40,7 +40,6 @@ export default function ImageDropzone() {
   }, [files]);
 
   const generateCode = async () => {
-    console.log("Files to process:", files);
     const imageUrls = files.map((file) => file.uploadedUrl);
     await fetch("/api/generate", {
       method: "POST",

@@ -12,7 +12,7 @@ const theme = createTheme({
       main: "#22D3EE",
     },
     background: {
-      default: "#354854", // light gray
+      default: "hsl(214.3 31.8% 91.4%)", // light gray
     },
   },
   typography: {

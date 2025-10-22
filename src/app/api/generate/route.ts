@@ -1,38 +1,30 @@
 import { NextResponse } from "next/server";
-import { InferenceClient } from "@huggingface/inference";
+import OpenAI from "openai";
+import { INPUT_PROMPT } from "@/utils/constants";
 export async function POST(req: Request) {
-  const HF_TOKEN = process.env.HUGGINGFACE_API_KEY;
-  console.log("api called");
-  const imageUrls = await req.json();
-  const firstImageUrl = imageUrls[0];
-  if (!HF_TOKEN) {
-    throw new Error("HUGGINGFACE_API_KEY is missing");
-  }
-
-  const client = new InferenceClient(HF_TOKEN);
-
+  const client = new OpenAI();
+  const imageUrl = await req.json();
+  console.log("generated image", imageUrl);
   try {
-    const result = await client.imageToText({
-      model: "Salesforce/blip-vqa-base",
-      data: await (await fetch("https://picsum.photos/300/300")).blob(),
-      parameters: {
-        question: "what is in the image",
-      },
-    });
-    console.log("Answer:", result.answer);
-    // const response = await client.chat.completions.create({
-    //   model: "Salesforce/blip2-flan-t5-xl-coco",
-    //   messages: [
+    // const response = await client.responses.create({
+    //   model: "gpt-4.1",
+    //   input: [
     //     {
     //       role: "user",
     //       content: [
-    //         { type: "text", text: "Generate React code based on this image:" },
-    //         { type: "image_url", image_url: { url: firstImageUrl } },
+    //         { type: "input_text", text: "what is in this image?" },
+    //         {
+    //           type: "input_image",
+    //           image_url:
+    //             "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+    //         },
     //       ],
     //     },
     //   ],
     // });
-    // console.log("response", response.choices[0].message);
+
+    // console.log(response);
+
     return NextResponse.json("test");
   } catch (err: any) {
     console.error(err);
