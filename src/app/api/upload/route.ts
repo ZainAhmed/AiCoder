@@ -19,14 +19,9 @@ export async function POST(req: Request) {
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
-
-  const filename = file.name;
+  const filename = `${Date.now()}-${file.name}`;
   const filePath = path.join(uploadsDir, filename);
-
-  // Avoid overwriting existing file
-  if (!fs.existsSync(filePath)) {
-    await writeFile(filePath, buffer);
-  }
+  await writeFile(filePath, buffer);
 
   return NextResponse.json({ url: `/uploads/${filename}` });
 }

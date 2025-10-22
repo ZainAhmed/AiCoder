@@ -4,10 +4,10 @@ import { INPUT_PROMPT } from "@/utils/constants";
 export async function POST(req: Request) {
   const client = new OpenAI();
   const imageUrl = await req.json();
-  console.log("generated image", imageUrl);
+
   try {
     // const response = await client.responses.create({
-    //   model: "gpt-4.1",
+    //   model: "gpt-5-nano",
     //   input: [
     //     {
     //       role: "user",
