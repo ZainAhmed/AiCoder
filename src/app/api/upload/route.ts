@@ -1,27 +1,39 @@
 import { NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import fs from "fs";
-import path from "path";
+import ImageKit from "imagekit";
 
 export async function POST(req: Request) {
   const formData = await req.formData();
   const file = formData.get("file") as File;
 
-  if (!file) {
-    return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-  }
-
   // Ensure the uploads folder exists
-  const uploadsDir = path.join(process.cwd(), "public/uploads");
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-  }
+  // const uploadsDir = path.join(process.cwd(), "public/uploads");
+  // if (!fs.existsSync(uploadsDir)) {
+  //   fs.mkdirSync(uploadsDir, { recursive: true });
+  // }
+
+  const imagekit = new ImageKit({
+    publicKey: process.env.IMAGE_KIT_PUBLIC_KEY as string,
+    privateKey: process.env.IMAGE_KIT_PRIVATE_KEY as string,
+    urlEndpoint: process.env.IMAGE_KIT_URL as string,
+  });
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   const filename = `${Date.now()}-${file.name}`;
-  const filePath = path.join(uploadsDir, filename);
-  await writeFile(filePath, buffer);
 
-  return NextResponse.json({ url: `/uploads/${filename}` });
+  try {
+    const result = await new Promise<any>((resolve, reject) => {
+      imagekit.upload({ file: buffer, fileName: filename }, (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      });
+    });
+    console.log("fileId", result.fileId);
+    return NextResponse.json({ url: result.url, fileId: result.fileId });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Upload failed", details: String(error) },
+      { status: 500 }
+    );
+  }
 }

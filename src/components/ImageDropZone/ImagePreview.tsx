@@ -1,19 +1,16 @@
 "use client";
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import Image from "next/image";
 import React from "react";
-
-export interface FileWithPreview {
-  file: File;
-  preview: string;
-  uploadedUrl: string;
-}
+import CloseIcon from "@mui/icons-material/Close";
+import { FileWithPreview } from "./ImageDropzone";
 
 interface ImagePreviewProps {
   files: FileWithPreview[];
+  onRemove: (uploadedUrl: string) => void;
 }
 
-export default function ImagePreview({ files }: ImagePreviewProps) {
+export default function ImagePreview({ files, onRemove }: ImagePreviewProps) {
   return (
     <Box
       sx={{
@@ -21,9 +18,9 @@ export default function ImagePreview({ files }: ImagePreviewProps) {
         display: "grid",
         gap: 2,
         gridTemplateColumns: {
-          xs: "repeat(2, 1fr)", // 2 per row on mobile
-          sm: "repeat(3, 1fr)", // 3 per row on tablets
-          md: "repeat(4, 1fr)", // 4 per row on desktops
+          xs: "repeat(2, 1fr)",
+          sm: "repeat(3, 1fr)",
+          md: "repeat(4, 1fr)",
         },
       }}
     >
@@ -33,7 +30,7 @@ export default function ImagePreview({ files }: ImagePreviewProps) {
           sx={{
             position: "relative",
             width: "100%",
-            paddingTop: "100%", // 1:1 aspect ratio
+            paddingTop: "100%",
             borderRadius: "8px",
             overflow: "hidden",
           }}
@@ -42,11 +39,22 @@ export default function ImagePreview({ files }: ImagePreviewProps) {
             src={f.preview}
             alt={f.uploadedUrl}
             fill
-            style={{
-              objectFit: "cover",
-              borderRadius: "8px",
-            }}
+            style={{ objectFit: "cover", borderRadius: "8px" }}
           />
+          <IconButton
+            onClick={() => onRemove(f.uploadedUrl)}
+            size="small"
+            sx={{
+              position: "absolute",
+              top: 4,
+              right: 4,
+              backgroundColor: "rgba(0,0,0,0.5)",
+              color: "white",
+              "&:hover": { backgroundColor: "rgba(0,0,0,0.7)" },
+            }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
         </Box>
       ))}
     </Box>

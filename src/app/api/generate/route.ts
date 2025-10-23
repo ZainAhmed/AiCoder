@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { INPUT_PROMPT } from "@/utils/constants";
+// import { INPUT_PROMPT } from "@/utils/constants";
 export async function POST(req: Request) {
   const client = new OpenAI();
-  const imageUrl = await req.json();
+  const imageUrls: string[] = await req.json();
 
   try {
     // const response = await client.responses.create({
@@ -12,12 +12,12 @@ export async function POST(req: Request) {
     //     {
     //       role: "user",
     //       content: [
-    //         { type: "input_text", text: "what is in this image?" },
-    //         {
-    //           type: "input_image",
-    //           image_url:
-    //             "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
-    //         },
+    //         { type: "input_text", text: "Describe these images together." },
+    //         ...imageUrls.map((url) => ({
+    //           type: "input_image" as const,
+    //           image_url: url,
+    //           detail: "auto" as const,
+    //         })),
     //       ],
     //     },
     //   ],

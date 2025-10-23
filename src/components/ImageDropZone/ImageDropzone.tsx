@@ -20,11 +20,10 @@ export default function ImageDropzone() {
 
     const res = await fetch("/api/upload", { method: "POST", body: formData });
     const data = await res.json();
-
     return {
       file,
       preview: URL.createObjectURL(file),
-      uploadedUrl: data.url.split("/").at(-1) ?? data.url,
+      uploadedUrl: data.url,
     };
   };
 
@@ -50,10 +49,17 @@ export default function ImageDropzone() {
     });
   };
 
+  const removeImage = (uploadedUrl: string) => {
+    setFiles((prev) => prev.filter((f) => f.uploadedUrl !== uploadedUrl));
+  };
   return (
     <Box>
       <DropArea onDrop={handleDrop} />
-      <ImagePreview files={files} />
+      <ImagePreview
+        files={files}
+        onRemove={(uploadedUrl) => removeImage(uploadedUrl)}
+      />
+
       <ActionButtons files={files} onGenerate={generateCode} />
     </Box>
   );
