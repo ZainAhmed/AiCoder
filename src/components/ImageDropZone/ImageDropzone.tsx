@@ -4,33 +4,43 @@ import { Box } from "@mui/material";
 import DropArea from "./DropArea";
 import ImagePreview from "./ImagePreview";
 import ActionButtons from "./ActionButtons";
-
-export interface FileWithPreview {
-  file: File;
-  preview: string;
-  uploadedUrl: string;
-}
+import {
+  useMutateUploadFile,
+  useMutateGenerateCode,
+  FileWithPreview,
+} from "@/hooks/reactQueryHooks";
+import LoadingIndicator from "@/components/LoadingIndicator";
 
 export default function ImageDropzone() {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
 
-  const uploadFile = async (file: File): Promise<FileWithPreview> => {
-    const formData = new FormData();
-    formData.append("file", file);
+  // ✅ Upload mutation — destructure what you need
+  const {
+    mutateAsync: uploadFile,
+    isPending: isUploadLoading,
+    isSuccess: isUploadSuccess,
+  } = useMutateUploadFile({
+    onError: (error) => console.error("Upload failed:", error),
+  });
 
-    const res = await fetch("/api/upload", { method: "POST", body: formData });
-    const data = await res.json();
-    return {
-      file,
-      preview: URL.createObjectURL(file),
-      uploadedUrl: data.url,
-    };
-  };
+  const {
+    mutate: generateCode,
+    isPending: isGeneratingCode,
+    isSuccess: isGenerateSuccess,
+  } = useMutateGenerateCode({
+    onSuccess: (data) => console.log("GPT response:", data),
+    onError: (error) => console.error("Code generation failed:", error),
+  });
 
-  const handleDrop = useCallback(async (accepted: File[]) => {
-    const uploadedFiles = await Promise.all(accepted.map(uploadFile));
-    setFiles((prev) => [...prev, ...uploadedFiles]);
-  }, []);
+  const handleDrop = useCallback(
+    async (accepted: File[]) => {
+      const uploaded = await Promise.all(
+        accepted.map((file) => uploadFile(file))
+      );
+      setFiles((prev) => [...prev, ...uploaded]);
+    },
+    [uploadFile]
+  );
 
   useEffect(() => {
     return () => {
@@ -38,29 +48,21 @@ export default function ImageDropzone() {
     };
   }, [files]);
 
-  const generateCode = async () => {
-    const imageUrls = files.map((file) => file.uploadedUrl);
-    await fetch("/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(imageUrls),
-    });
-  };
-
   const removeImage = (uploadedUrl: string) => {
     setFiles((prev) => prev.filter((f) => f.uploadedUrl !== uploadedUrl));
   };
+
+  const isLoading = isUploadLoading || isGeneratingCode;
+
   return (
     <Box>
       <DropArea onDrop={handleDrop} />
-      <ImagePreview
+      <ImagePreview files={files} onRemove={removeImage} />
+      <ActionButtons
         files={files}
-        onRemove={(uploadedUrl) => removeImage(uploadedUrl)}
+        onGenerate={() => generateCode(files.map((f) => f.uploadedUrl))}
       />
-
-      <ActionButtons files={files} onGenerate={generateCode} />
+      {isLoading && <LoadingIndicator />}
     </Box>
   );
 }

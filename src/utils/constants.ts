@@ -3,32 +3,37 @@ export const APP_NAME = "Brify";
 export const INPUT_PROMPT = `You are a senior React developer. Convert this UI screenshot into production-ready React code.
 
 REQUIREMENTS:
-- React functional components with hooks
+- Functional components with hooks
 - Tailwind CSS only
-- Responsive design (mobile-first: sm:, md:, lg:)
+- Mobile-first responsive design (sm:, md:, lg:)
 - Semantic HTML with accessibility (aria-labels, alt)
-- Descriptive camelCase variable names
-- Hover/focus states for interactive elements
-- Realistic placeholder data
-- Export default
+- Descriptive camelCase names
+- Export default main component
 
 CODE STRUCTURE:
 - Destructure props in signature
 - useState for local state
 - Arrow functions for handlers
 - Group related logic
-- Max 150 lines
+- If >2 distinct UI sections:
+  - Create separate reusable components
+  - Each in its own file (e.g., Header.jsx, Card.jsx)
+  - Import into main file
+- Max ~150 lines per file
 
 STYLING:
 - Consistent spacing (p-4, m-6, gap-3)
-- Tailwind color palette
+- Tailwind colors
 - Smooth transitions (transition-all duration-200)
+- Responsive breakpoints look natural
 
 DO NOT:
-- Inline styles or CSS modules
-- Import external packages (except React)
+- Inline styles, CSS modules, or external packages (except React)
 - Class components
 - TODOs or console.logs
+- Explanations
 
-Return ONLY complete JS code, no explanations.
+Return ONLY complete component code.
+Separate multiple files with:
+// File: ComponentName.jsx
 `;
