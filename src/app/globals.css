@@ -1,12 +1,11 @@
 :root {
   --background: #ffffff;
-  --foreground: hsl(214.3 31.8% 91.4%), // light gray
-;
+  --foreground: #000;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: hsl(214.3 31.8% 91.4%);
+    --background: #252526;
     --foreground: #ededed;
   }
 }

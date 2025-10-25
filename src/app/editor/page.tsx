@@ -2,16 +2,12 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import FileExplorer from "@/components/FileExplorer";
-
-const CodeEditor = dynamic(() => import("@/components/CodeEditor"), {
+import FileExplorer from "@/components/Editor/FileExplorer";
+import { FileSystemFolder, FileSystemNode } from "@/utils/types";
+import { fileSystem } from "@/app/filesystem";
+const CodeEditor = dynamic(() => import("@/components/Editor/CodeEditor"), {
   ssr: false,
 });
-
-type FileSystemNode = string | FileSystemFolder;
-export interface FileSystemFolder {
-  [name: string]: FileSystemNode;
-}
 
 function getNested(
   fs: FileSystemFolder,
@@ -45,10 +41,7 @@ function setNested(fs: FileSystemFolder, path: string, value: string): void {
 }
 
 export default function EditorPage() {
-  const [files, setFiles] = useState<FileSystemFolder>({
-    home: { "index.js": 'console.log("Home index");' },
-    test: { "me.js": 'console.log("Test me");' },
-  });
+  const [files, setFiles] = useState<FileSystemFolder>(fileSystem);
 
   const [currentFile, setCurrentFile] = useState("home/index.js");
   const [code, setCode] = useState(getNested(files, currentFile));

@@ -1,11 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { FileSystemFolder } from "@/utils/types";
 
-type FileSystemNode = string | FileSystemFolder;
-interface FileSystemFolder {
-  [name: string]: FileSystemNode;
-}
 interface FileExplorerProps {
   files: FileSystemFolder;
   onFileSelect: (path: string) => void;
@@ -21,8 +18,11 @@ export default function FileExplorer({
 
   const toggleFolder = (path: string) => {
     const newSet = new Set(expandedFolders);
-    if (newSet.has(path)) newSet.delete(path);
-    else newSet.add(path);
+    if (newSet.has(path)) {
+      newSet.delete(path);
+    } else {
+      newSet.add(path);
+    }
     setExpandedFolders(newSet);
   };
 

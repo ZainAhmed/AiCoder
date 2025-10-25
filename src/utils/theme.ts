@@ -14,6 +14,10 @@ const theme = createTheme({
     background: {
       default: "hsl(214.3 31.8% 91.4%)", // light gray
     },
+    text: {
+      primary: "#000000", // black text
+      secondary: "#333333", // dark gray for secondary text
+    },
   },
   typography: {
     fontFamily: "Roboto, Arial, sans-serif",

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import * as monaco from "monaco-editor";
-
 interface CodeEditorProps {
   path: string;
   code: string;
