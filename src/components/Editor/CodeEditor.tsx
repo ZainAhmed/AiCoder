@@ -79,8 +79,12 @@ export default function CodeEditor({
   // If the content changes externally (e.g., file modified elsewhere)
   useEffect(() => {
     const model = modelCache.current[path];
-    if (model && model.getValue() !== code) {
-      model.setValue(code);
+    if (model && typeof code === "string" && model.getValue() !== code) {
+      try {
+        model.setValue(code);
+      } catch (err) {
+        console.error("Failed to set Monaco value:", err);
+      }
     }
   }, [code, path]);
 

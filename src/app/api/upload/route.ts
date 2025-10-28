@@ -28,7 +28,6 @@ export async function POST(req: Request) {
         else resolve(result);
       });
     });
-    console.log("fileId", result.fileId);
     return NextResponse.json({ url: result.url, fileId: result.fileId });
   } catch (error) {
     return NextResponse.json(

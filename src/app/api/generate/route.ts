@@ -6,26 +6,27 @@ export async function POST(req: Request) {
   const imageUrls: string[] = await req.json();
 
   try {
-    const response = await client.responses.create({
-      model: "gpt-5-nano",
-      input: [
-        {
-          role: "user",
-          content: [
-            { type: "input_text", text: INPUT_PROMPT },
-            ...imageUrls.map((url) => ({
-              type: "input_image" as const,
-              image_url: url,
-              detail: "auto" as const,
-            })),
-          ],
-        },
-      ],
-    });
+    // const response = await client.responses.create({
+    //   model: "gpt-5-nano",
+    //   input: [
+    //     {
+    //       role: "user",
+    //       content: [
+    //         { type: "input_text", text: INPUT_PROMPT },
+    //         ...imageUrls.map((url) => ({
+    //           type: "input_image" as const,
+    //           image_url: url,
+    //           detail: "auto" as const,
+    //         })),
+    //       ],
+    //     },
+    //   ],
+    // });
 
-    console.log(response);
+    // console.log("response", response);
 
-    return NextResponse.json({ output_text: response });
+    // return NextResponse.json({ output_text: response });
+    return NextResponse.json({ output_text: "test" });
   } catch (err: any) {
     console.error(err);
     return NextResponse.json(

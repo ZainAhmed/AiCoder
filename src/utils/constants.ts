@@ -1,6 +1,6 @@
 export const APP_NAME = "Brify";
 
-export const INPUT_PROMPT = `You are a senior React developer. Convert this UI screenshot into production-ready React code.
+export const INPUT_PROMPT = `You are a senior React developer. Convert this UI screenshot into production-ready Vite code in React.
 
 REQUIREMENTS:
 - Functional components with hooks
@@ -35,5 +35,5 @@ DO NOT:
 
 Return ONLY complete component code.
 Separate multiple files with:
-// File: ComponentName.jsx
+// File: ComponentName.tsx
 `;

@@ -4,33 +4,19 @@ import { Box } from "@mui/material";
 import DropArea from "./DropArea";
 import ImagePreview from "./ImagePreview";
 import ActionButtons from "./ActionButtons";
-import {
-  useMutateUploadFile,
-  useMutateGenerateCode,
-  FileWithPreview,
-} from "@/hooks/reactQueryHooks";
+import { useMutateUploadFile, FileWithPreview } from "@/hooks/reactQueryHooks";
 import LoadingIndicator from "@/components/LoadingIndicator";
-
+import { useRouter } from "next/navigation";
+import { useImageStore } from "@/store/imageStore";
 export default function ImageDropzone() {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const setImageUrl = useImageStore((s) => s.setImageUrl);
+  const router = useRouter();
 
-  // ✅ Upload mutation — destructure what you need
-  const {
-    mutateAsync: uploadFile,
-    isPending: isUploadLoading,
-    isSuccess: isUploadSuccess,
-  } = useMutateUploadFile({
-    onError: (error) => console.error("Upload failed:", error),
-  });
-
-  const {
-    mutate: generateCode,
-    isPending: isGeneratingCode,
-    isSuccess: isGenerateSuccess,
-  } = useMutateGenerateCode({
-    onSuccess: (data) => console.log("GPT response:", data),
-    onError: (error) => console.error("Code generation failed:", error),
-  });
+  const { mutateAsync: uploadFile, isPending: isUploadLoading } =
+    useMutateUploadFile({
+      onError: (error) => console.error("Upload failed:", error),
+    });
 
   const handleDrop = useCallback(
     async (accepted: File[]) => {
@@ -43,6 +29,7 @@ export default function ImageDropzone() {
   );
 
   useEffect(() => {
+    setImageUrl(files.map((file) => file.uploadedUrl));
     return () => {
       files.forEach((f) => URL.revokeObjectURL(f.preview));
     };
@@ -51,8 +38,9 @@ export default function ImageDropzone() {
   const removeImage = (uploadedUrl: string) => {
     setFiles((prev) => prev.filter((f) => f.uploadedUrl !== uploadedUrl));
   };
-
-  const isLoading = isUploadLoading || isGeneratingCode;
+  const handleGenerateCodePressed = () => {
+    router.push("/editor");
+  };
 
   return (
     <Box>
@@ -60,9 +48,9 @@ export default function ImageDropzone() {
       <ImagePreview files={files} onRemove={removeImage} />
       <ActionButtons
         files={files}
-        onGenerate={() => generateCode(files.map((f) => f.uploadedUrl))}
+        onGenerate={() => handleGenerateCodePressed()}
       />
-      {isLoading && <LoadingIndicator />}
+      {isUploadLoading && <LoadingIndicator />}
     </Box>
   );
 }
