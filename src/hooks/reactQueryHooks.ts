@@ -30,17 +30,6 @@ const compressFile = async (file: File): Promise<File> => {
       maxWidthOrHeight: 1920,
       useWebWorker: true,
     });
-
-    console.log(
-      `Original: ${file.name} ${(file.size / 1024 / 1024).toFixed(2)} MB`
-    );
-    console.log(
-      `Compressed: ${compressedFile.name} ${(
-        compressedFile.size /
-        1024 /
-        1024
-      ).toFixed(2)} MB`
-    );
     return compressedFile;
   } catch (error: Error) {
     console.log(error);

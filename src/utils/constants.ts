@@ -1,6 +1,6 @@
 export const APP_NAME = "Brify";
 
-export const INPUT_PROMPT = `You are a senior React developer. Convert this UI screenshot into production-ready Vite code in React.
+export const INPUT_PROMPT = `You are a senior React developer. Convert this UI screenshot into production-ready code in React.
 
 REQUIREMENTS:
 - Functional components with hooks
@@ -15,6 +15,9 @@ CODE STRUCTURE:
 - useState for local state
 - Arrow functions for handlers
 - Group related logic
+- Name the root file Main.tsx.
+- It imports and renders all other components.
+- Export default from Main.tsx.
 - If >2 distinct UI sections:
   - Create separate reusable components
   - Each in its own file (e.g., Header.jsx, Card.jsx)
@@ -35,5 +38,4 @@ DO NOT:
 
 Return ONLY complete component code.
 Separate multiple files with:
-// File: ComponentName.tsx
-`;
+// File: ComponentName.tsx`;

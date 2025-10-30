@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as monaco from "monaco-editor";
+
 interface CodeEditorProps {
   path: string;
   code: string;
@@ -24,69 +25,60 @@ export default function CodeEditor({
   useEffect(() => {
     if (!editorRef.current) return;
 
-    // Monaco Web Worker setup (needed for Next.js Turbopack)
-    window.MonacoEnvironment = {
-      getWorker: function (_moduleId: string, label: string) {
+    // 🧠 Ensure workers are defined before creating the editor
+    self.MonacoEnvironment = {
+      getWorker(_id: string, label: string) {
         if (label === "typescript" || label === "javascript") {
           return new Worker(
             new URL(
-              "monaco-editor/esm/vs/language/typescript/ts.worker",
+              "monaco-editor/esm/vs/language/typescript/ts.worker?worker",
               import.meta.url
-            )
+            ),
+            { type: "module" }
           );
         }
         return new Worker(
-          new URL("monaco-editor/esm/vs/editor/editor.worker", import.meta.url)
+          new URL(
+            "monaco-editor/esm/vs/editor/editor.worker?worker",
+            import.meta.url
+          ),
+          { type: "module" }
         );
       },
     };
 
+    // 🧩 Create initial model safely
+    const uri = monaco.Uri.parse(`file:///${path}`);
+    const model =
+      monaco.editor.getModel(uri) ||
+      monaco.editor.createModel(code || "", language, uri);
+    modelCache.current[path] = model;
+
+    // 🎨 Create the editor instance
     editorInstance.current = monaco.editor.create(editorRef.current, {
-      value: code,
-      language,
+      model,
       theme: "vs-dark",
       automaticLayout: true,
     });
 
-    return () => editorInstance.current?.dispose();
-  }, []);
-
-  // Handle model creation and switching
-  useEffect(() => {
-    if (!editorInstance.current) return;
-
-    let model = modelCache.current[path];
-    if (!model) {
-      model = monaco.editor.createModel(
-        code,
-        language,
-        monaco.Uri.parse(`file:///${path}`)
-      );
-      modelCache.current[path] = model;
-    }
-
-    // Update model if switching files
-    editorInstance.current.setModel(model);
-
-    // Update code if model changed externally
+    // 💬 Listen for edits
     const sub = model.onDidChangeContent(() => {
       onChange?.(model.getValue());
     });
 
-    return () => sub.dispose();
-  }, [path]);
+    return () => {
+      sub.dispose();
+      editorInstance.current?.dispose();
+    };
+  }, []);
 
-  // If the content changes externally (e.g., file modified elsewhere)
+  // 🔄 Sync external code updates
   useEffect(() => {
     const model = modelCache.current[path];
     if (model && typeof code === "string" && model.getValue() !== code) {
-      try {
-        model.setValue(code);
-      } catch (err) {
-        console.error("Failed to set Monaco value:", err);
-      }
+      model.setValue(code);
     }
   }, [code, path]);
 
-  return <div ref={editorRef} style={{ height: "100%", width: "100%" }} />;
+  return <div ref={editorRef} className="h-full w-full" />;
 }
