@@ -80,5 +80,5 @@ export default function CodeEditor({
     }
   }, [code, path]);
 
-  return <div ref={editorRef} className="h-full w-full" />;
+  return <div ref={editorRef} style={{ height: "100%", width: "100%" }} />;
 }
