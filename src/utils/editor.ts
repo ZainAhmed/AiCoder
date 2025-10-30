@@ -46,8 +46,4 @@ export const createNewFile = (
   root[fileName] = data;
 };
 
-const formatFiles = () => {};
-// addData
-//renameFile
-//renameFolder
-//replaceData
+const findMainComponent = () => {};

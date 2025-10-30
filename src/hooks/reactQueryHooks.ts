@@ -1,26 +1,51 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-
+import imageCompression from "browser-image-compression";
 /* ---------- UPLOAD FILE ---------- */
 
 export interface FileWithPreview {
-  file: File;
+  compressedFile: File;
   preview: string;
   uploadedUrl: string;
 }
 
 const uploadFile = async (file: File): Promise<FileWithPreview> => {
+  const compressedFile = await compressFile(file);
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", compressedFile);
   const res = await fetch("/api/upload", { method: "POST", body: formData });
 
   if (!res.ok) throw new Error("Upload failed");
   const data = await res.json();
 
   return {
-    file,
-    preview: URL.createObjectURL(file),
+    compressedFile,
+    preview: URL.createObjectURL(compressedFile),
     uploadedUrl: data.url,
   };
+};
+const compressFile = async (file: File): Promise<File> => {
+  try {
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    });
+
+    console.log(
+      `Original: ${file.name} ${(file.size / 1024 / 1024).toFixed(2)} MB`
+    );
+    console.log(
+      `Compressed: ${compressedFile.name} ${(
+        compressedFile.size /
+        1024 /
+        1024
+      ).toFixed(2)} MB`
+    );
+    return compressedFile;
+  } catch (error: Error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 export const useMutateUploadFile = (
