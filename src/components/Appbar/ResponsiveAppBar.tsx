@@ -11,8 +11,6 @@ import Logo from "./Logo";
 import NavMenu from "./NavMenu";
 import DesktopMenu from "./DesktopMenu";
 
-const pages = ["Home"];
-
 const ResponsiveAppBar: React.FC = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -40,7 +38,6 @@ const ResponsiveAppBar: React.FC = () => {
               <MenuIcon />
             </IconButton>
             <NavMenu
-              pages={pages}
               anchorEl={anchorElNav}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
