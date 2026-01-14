@@ -8,10 +8,11 @@ interface NavMenuProps {
   anchorEl: null | HTMLElement;
   open: boolean;
   onClose: () => void;
+  navLinks: string[]
 }
 
-const NavMenu: React.FC<NavMenuProps> = ({ anchorEl, open, onClose }) => {
-  const navLinks = ["Home"];
+const NavMenu: React.FC<NavMenuProps> = ({navLinks, anchorEl, open, onClose }) => {
+  
   return (
     <Menu
       id="menu-appbar"

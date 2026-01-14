@@ -12,6 +12,7 @@ import NavMenu from "./NavMenu";
 import DesktopMenu from "./DesktopMenu";
 
 const ResponsiveAppBar: React.FC = () => {
+  const navLinks = ["Home", "Feature", "About"];
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -41,11 +42,12 @@ const ResponsiveAppBar: React.FC = () => {
               anchorEl={anchorElNav}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
+              navLinks={navLinks}
             />
           </Box>
 
           <Logo variant="mobile" />
-          <DesktopMenu pages={pages} onClick={handleCloseNavMenu} />
+          <DesktopMenu pages={navLinks} onClick={handleCloseNavMenu} />
         </Toolbar>
       </Container>
     </AppBar>
